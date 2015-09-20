@@ -7,3 +7,9 @@ c:\users\rimas\documents\visual studio 2015\Projects\BankSystem\BankSystem\obj\D
 C:\Sites\Bank-System\BankSystem\bin\Debug\BankSystem.exe.config
 C:\Sites\Bank-System\BankSystem\obj\Debug\BankSystem.exe
 C:\Sites\Bank-System\BankSystem\obj\Debug\BankSystem.pdb
+C:\Users\Rimas\Documents\GitHubVisualStudio\Bank-System\BankSystem\bin\Debug\BankSystem.exe.config
+C:\Users\Rimas\Documents\GitHubVisualStudio\Bank-System\BankSystem\obj\Debug\BankSystem.exe
+C:\Users\Rimas\Documents\GitHubVisualStudio\Bank-System\BankSystem\obj\Debug\BankSystem.pdb
+C:\Users\Rimas\Documents\GitHubVisualStudio\Bank-System\BankSystem\bin\Debug\BankSystem.exe
+C:\Users\Rimas\Documents\GitHubVisualStudio\Bank-System\BankSystem\bin\Debug\BankSystem.pdb
+C:\Users\Rimas\Documents\GitHubVisualStudio\Bank-System\BankSystem\obj\Debug\BankSystem.csprojResolveAssemblyReference.cache
