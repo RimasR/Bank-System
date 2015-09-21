@@ -23,13 +23,39 @@ namespace BankSystem
         static void Registration(BankAccount account)
         {
             Console.Write("Please enter your first name: ");
-            account.name = Console.ReadLine();
+            account.name = GetCredentials();
             Console.Write("Please enter your last name: ");
-            account.surname = Console.ReadLine();
+            account.surname = GetCredentials();
             Console.Write("Please enter your birth date dd-mm-yyyy: ");
             account.year = Console.ReadLine();
             account.id = RandomNumber(10000, 100000);
-            account.pass = RandomNumber(100000, 1000000);    
+            account.pass = RandomNumber(100000, 1000000);
+            Console.WriteLine("Your id is: {0}", account.id);
+            Console.WriteLine("Your password is: {0}", account.pass);
+        }
+
+        static void Login()
+        {
+
+        }
+        
+        static string GetCredentials()
+        {
+            bool valid = false;
+            string name = "";
+            while (!valid)
+            {
+                name = Console.ReadLine();
+                if (System.Text.RegularExpressions.Regex.IsMatch(name, @"^[a-zA-Z]+$"))
+                {
+                    valid = true;
+                }
+                else
+                {
+                    Console.WriteLine("Wrong input, only letters are allowed!");
+                }
+            }
+            return name;
         }
 
         static int RandomNumber(int i, int x)
@@ -37,11 +63,6 @@ namespace BankSystem
             Random rnd = new Random();
             int random = rnd.Next(i, x);
             return random;
-        }
-
-        static void Login()
-        {
-
         }
 
         static void Main(string[] args)
@@ -88,7 +109,8 @@ namespace BankSystem
         public int id;
         public int pass;
         public string year;
-        double money;
+        double money
+        { get; set; }
         public BankAccount()
         {
 

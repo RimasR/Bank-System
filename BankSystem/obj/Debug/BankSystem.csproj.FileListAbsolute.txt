@@ -13,3 +13,9 @@ C:\Users\Rimas\Documents\GitHubVisualStudio\Bank-System\BankSystem\obj\Debug\Ban
 C:\Users\Rimas\Documents\GitHubVisualStudio\Bank-System\BankSystem\bin\Debug\BankSystem.exe
 C:\Users\Rimas\Documents\GitHubVisualStudio\Bank-System\BankSystem\bin\Debug\BankSystem.pdb
 C:\Users\Rimas\Documents\GitHubVisualStudio\Bank-System\BankSystem\obj\Debug\BankSystem.csprojResolveAssemblyReference.cache
+C:\Users\Kristupas\Source\Repos\Bank-System\BankSystem\bin\Debug\BankSystem.exe.config
+C:\Users\Kristupas\Source\Repos\Bank-System\BankSystem\obj\Debug\BankSystem.exe
+C:\Users\Kristupas\Source\Repos\Bank-System\BankSystem\obj\Debug\BankSystem.pdb
+C:\Users\Kristupas\Source\Repos\Bank-System\BankSystem\bin\Debug\BankSystem.exe
+C:\Users\Kristupas\Source\Repos\Bank-System\BankSystem\bin\Debug\BankSystem.pdb
+C:\Users\Kristupas\Source\Repos\Bank-System\BankSystem\obj\Debug\BankSystem.csprojResolveAssemblyReference.cache
