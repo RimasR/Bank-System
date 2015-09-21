@@ -22,12 +22,21 @@ namespace BankSystem
     {
         static void Registration(BankAccount account)
         {
-            Console.Write("Please enter your first name");
+            Console.Write("Please enter your first name: ");
             account.name = Console.ReadLine();
-            Console.Write("Please enter your last name");
+            Console.Write("Please enter your last name: ");
             account.surname = Console.ReadLine();
             Console.Write("Please enter your birth date dd-mm-yyyy: ");
-            account.year = Console.ReadLine();      
+            account.year = Console.ReadLine();
+            account.id = RandomNumber(10000, 100000);
+            account.pass = RandomNumber(100000, 1000000);    
+        }
+
+        static int RandomNumber(int i, int x)
+        {
+            Random rnd = new Random();
+            int random = rnd.Next(i, x);
+            return random;
         }
 
         static void Login()
@@ -43,7 +52,7 @@ namespace BankSystem
             admin.permissions = PermissionTypes.Read | PermissionTypes.Write | PermissionTypes.Delete;
             bool canRead = ((PermissionTypes.Read & admin.permissions) == PermissionTypes.Read);
             Console.WriteLine(canRead);*/
-
+            List<BankAccount> accounts = new List<BankAccount>();
 
             Console.WriteLine("Welcome to Unsecured Bank system! Choose what you want to do:");
             Console.WriteLine("1. Register new account.");
@@ -54,7 +63,8 @@ namespace BankSystem
                 case "1":
                     //Registration
                     BankAccount account = new BankAccount();
-                    Registration(account);               
+                    Registration(account);
+                    accounts.Add(account);         
                     break;
                 case "2":
                     //Login
@@ -64,6 +74,7 @@ namespace BankSystem
 
                     break;
             }
+            Console.ReadLine();
         }
     }
 
@@ -74,9 +85,10 @@ namespace BankSystem
         { get; set; }
         public string surname
         { get; set; }
-        //int id;
+        public int id;
+        public int pass;
         public string year;
-        //double money;
+        double money;
         public BankAccount()
         {
 
@@ -87,9 +99,6 @@ namespace BankSystem
             this.surname = surname;
             this.year = year;
         }
-
-
-
     }
 }
 
