@@ -27,7 +27,7 @@ namespace BankSystem
             Console.Write("Please enter your last name: ");
             account.surname = GetCredentials();
             Console.Write("Please enter your birth date dd-mm-yyyy: ");
-            account.year = Console.ReadLine();
+            account.year = getDate();
             account.id = RandomNumber(10000, 100000);
             account.pass = RandomNumber(100000, 1000000);
             Console.WriteLine("Your id is: {0}", account.id);
@@ -56,6 +56,12 @@ namespace BankSystem
                 }
             }
             return name;
+        }
+
+        static string getDate()
+        {
+            string date = Console.ReadLine();
+            return date;
         }
 
         static int RandomNumber(int i, int x)
