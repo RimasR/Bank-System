@@ -32,6 +32,7 @@ namespace BankSystem
             account.pass = RandomNumber(100000, 1000000);
             Console.WriteLine("Your id is: {0}", account.id);
             Console.WriteLine("Your password is: {0}", account.pass);
+            Console.WriteLine("Goodbye!");
         }
 
         static void Login()
