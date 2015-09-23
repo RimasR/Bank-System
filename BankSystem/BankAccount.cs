@@ -10,7 +10,7 @@
         public int id;
         public int pass;
         public string year;
-        double money
+        public double money
         { get; set; }
         public BankAccount()
         {
