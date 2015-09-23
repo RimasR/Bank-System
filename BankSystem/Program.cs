@@ -24,11 +24,11 @@ namespace BankSystem
         static void Registration(BankAccount account)
         {
             Console.Write("Please enter your first name: ");
-            account.name = GetCredentials();
+            account.name = ReadCredentials();
             Console.Write("Please enter your last name: ");
-            account.surname = GetCredentials();
+            account.surname = ReadCredentials();
             Console.Write("Please enter your birth date dd-mm-yyyy: ");
-            account.year = getDate();
+            account.year = ReadDate();
             account.id = RandomNumber(10000, 100000);
             account.pass = RandomNumber(100000, 1000000);
             Console.WriteLine("Your id is: {0}", account.id);
@@ -39,13 +39,13 @@ namespace BankSystem
         static void Login(List<BankAccount> accounts)
         {
             Console.Write("Please enter your id: ");
-            string id = Console.ReadLine();
+            string id = ReadLoginInfo("id");
             Console.Write("Please enter your password: ");
-            string password = Console.ReadLine();
-            if (VerifyAccount(id, password, accounts) == true)
+            string password = ReadLoginInfo("pass");
+            if (VerifyAccount(id, password, accounts))
             {
-                Console.Write("Please enter you password: ");
-                string pass = Console.ReadLine();
+                Console.Write("Please enter you password: "); //Bybis zino kas cia
+                string pass = ReadLoginInfo("pass");
                     SystemTray(id);
             }
             else
@@ -66,7 +66,7 @@ namespace BankSystem
 
         }
   
-        static string GetCredentials()
+        static string ReadCredentials()
         {
             bool valid = false;
             string name = "";
@@ -79,16 +79,49 @@ namespace BankSystem
                 }
                 else
                 {
-                    Console.WriteLine("Wrong input, only letters are allowed!");
+                    Console.WriteLine("Wrong input!");
                 }
             }
             return name;
         }
 
-        static string getDate()
+        static string ReadDate()
         {
+            //Reikia pabaigti
             string date = Console.ReadLine();
             return date;
+        }
+
+        static string ReadLoginInfo(string type)
+        {
+            string id = "";
+            bool valid = false;
+            int length = 0;
+            switch (type)
+            {
+                case "id":
+                    length = 5;
+                    break;
+                case "pass":
+                    length = 6;
+                    break;
+                default:
+
+                    break;
+            }
+            while (!valid)
+            {
+                id = Console.ReadLine();
+                if (System.Text.RegularExpressions.Regex.IsMatch(id, "^[0-9]*$") && Math.Floor(Math.Log10(int.Parse(id)) + 1) == length)
+                {
+                    valid = true;
+                }
+                else
+                {
+                    Console.WriteLine("Wrong input!");
+                }
+            }
+            return id;
         }
 
         static int RandomNumber(int i, int x)
