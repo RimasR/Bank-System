@@ -39,13 +39,13 @@ namespace BankSystem
         static void Login(List<BankAccount> accounts)
         {
             Console.Write("Please enter your id: ");
-            string id = ReadLoginInfo("id");
+            int id = ReadLoginInfo("id");
             Console.Write("Please enter your password: ");
-            string password = ReadLoginInfo("pass");
+            int password = ReadLoginInfo("pass");
             if (VerifyAccount(id, password, accounts))
             {
                 Console.Write("Please enter you password: "); //Bybis zino kas cia
-                string pass = ReadLoginInfo("pass");
+                int pass = ReadLoginInfo("pass");
                     SystemTray(id);
             }
             else
@@ -54,14 +54,14 @@ namespace BankSystem
             }
         }
 
-        static bool VerifyAccount(string id, string password, List<BankAccount> accounts)
+        static bool VerifyAccount(int id, int password, List<BankAccount> accounts)
         {
             /*Need to start on this after reading from file is done!! 
             Important for Login!!!*/
             return true;
         }
 
-        static void SystemTray(string id)
+        static void SystemTray(int id)
         {
 
         }
@@ -92,9 +92,9 @@ namespace BankSystem
             return date;
         }
 
-        static string ReadLoginInfo(string type)
+        static int ReadLoginInfo(string type)
         {
-            string id = "";
+            int id = 0;
             bool valid = false;
             int length = 0;
             switch (type)
@@ -111,8 +111,16 @@ namespace BankSystem
             }
             while (!valid)
             {
-                id = Console.ReadLine();
-                if (System.Text.RegularExpressions.Regex.IsMatch(id, "^[0-9]*$") && Math.Floor(Math.Log10(int.Parse(id)) + 1) == length)
+                string temp = Console.ReadLine();
+                if (!string.IsNullOrEmpty(temp) && System.Text.RegularExpressions.Regex.IsMatch(temp, "^[0-9]*$"))
+                {
+                    id = int.Parse(temp);
+                }
+                else
+                {
+                    Console.WriteLine("Wrong input!");
+                }
+                if (Math.Floor(Math.Log10(id) + 1) == length)
                 {
                     valid = true;
                 }
@@ -145,7 +153,7 @@ namespace BankSystem
                 while ((line = file.ReadLine()) != null)
                 {
                     string[] words = line.Split(' ');
-                    /*Console.WriteLine("{0}, {1}, {2}, {3}, {4}, {5} ", words[0], words[1], words[2], words[3], words[4], words[5]);*/
+                    Console.WriteLine("{0}, {1}, {2}, {3}, {4}, {5} ", words[0], words[1], words[2], words[3], words[4], words[5]);
                     BankAccount account = new BankAccount();
                     account.name = words[0];
                     account.surname = words[1];
