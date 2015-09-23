@@ -115,14 +115,14 @@ namespace BankSystem
                 if (!string.IsNullOrEmpty(temp) && System.Text.RegularExpressions.Regex.IsMatch(temp, "^[0-9]*$"))
                 {
                     id = int.Parse(temp);
-                }
-                else
-                {
-                    Console.WriteLine("Wrong input!");
-                }
-                if (Math.Floor(Math.Log10(id) + 1) == length)
-                {
-                    valid = true;
+                    if (Math.Floor(Math.Log10(id) + 1) == length)
+                    {
+                        valid = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Wrong input!");
+                    }
                 }
                 else
                 {
