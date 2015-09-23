@@ -142,15 +142,14 @@ namespace BankSystem
             Console.WriteLine("Welcome to Unsecured Bank system! Choose what you want to do:");
             Console.WriteLine("1. Register new account.");
             Console.WriteLine("2. Login with existing account.");
-            string i = Console.ReadLine();
-            switch (i)
+            switch (int.Parse(Console.ReadLine()))
             {
-                case "1": //Registration form
+                case 1: //Registration form
                     BankAccount account = new BankAccount();
                     Registration(account);
                     accounts.Add(account);         
                     break;
-                case "2": //Login
+                case 2: //Login
                     Login(accounts);
                     break;
                 default:
