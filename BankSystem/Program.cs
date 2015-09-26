@@ -38,34 +38,68 @@ namespace BankSystem
 
         static void Login(List<BankAccount> accounts)
         {
+            BankAccount account = new BankAccount();
             Console.Write("Please enter your id: ");
             int id = ReadLoginInfo("id");
             Console.Write("Please enter your password: ");
             int password = ReadLoginInfo("pass");
-            if (VerifyAccount(id, password, accounts))
+            foreach (BankAccount c in accounts)
             {
-                Console.Write("Please enter you password: "); //Bybis zino kas cia
-                int pass = ReadLoginInfo("pass");
-                    SystemTray(id);
+                if ((c.id == id) && (c.pass == password))
+                {
+                    account = c;
+                    Console.WriteLine("Logged in successfully!");
+                    SystemTray(account, accounts);
+                }
             }
-            else
+            
+        }
+
+        static void SystemTray(BankAccount account, List<BankAccount> accounts)
+        {
+            Console.WriteLine("Welcome back " + account.name + "! Avialable options: ");
+            Console.WriteLine("1. Transfer money to other account");
+            Console.WriteLine("2. Show your credentials");
+            Console.Write("3. Delete account \n What would you like to do?");
+            string i = Console.ReadLine();
+            switch (int.Parse(i))
             {
-
+                case 1:
+                    Console.Write("To what ID do you want to send the money to? ");
+                    int id = ReadLoginInfo("id");
+                    Console.Write("How much money do you want to transfer? ");
+                    int money = int.Parse(Console.ReadLine());
+                    var found = accounts.FirstOrDefault(c => c.id == id);
+                    account.money = account.money - money;                    
+                    found.money = found.money + money;
+                    //Write accounts id, verify if real
+                    //Choose amount to send, verify if you have it
+                    //Clone object from list, clone.money = normal.money
+                    break;
+                case 2:
+                    Console.Write("Name: {0}", account.name);
+                    Console.Write("Surname: {0}", account.surname);
+                    Console.Write("Birth date: {0}", account.year);
+                    Console.Write("Money: {0}", account.money);
+                    break;
+                case 3:
+                    if ((PermissionTypes.Delete & account.permissions) == PermissionTypes.Delete)
+                    {
+                        Console.WriteLine("Do you really want to delete this account? Y/N");
+                        string temp = Console.ReadLine();
+                        switch (temp)
+                        {
+                            case "Y":
+                                account = null;
+                                break;
+                        }
+                    }
+                        break;
             }
+            bool canDelete = ((PermissionTypes.Delete & account.permissions) == PermissionTypes.Delete);
+            
         }
 
-        static bool VerifyAccount(int id, int password, List<BankAccount> accounts)
-        {
-            /*Need to start on this after reading from file is done!! 
-            Important for Login!!!*/
-            return true;
-        }
-
-        static void SystemTray(int id)
-        {
-
-        }
-  
         static string ReadCredentials()
         {
             bool valid = false;
@@ -115,7 +149,7 @@ namespace BankSystem
                 if (!string.IsNullOrEmpty(temp) && System.Text.RegularExpressions.Regex.IsMatch(temp, "^[0-9]*$"))
                 {
                     id = int.Parse(temp);
-                    if (Math.Floor(Math.Log10(id) + 1) == length)
+                    if (temp.Length == length)
                     {
                         valid = true;
                     }
@@ -161,6 +195,7 @@ namespace BankSystem
                     account.id = int.Parse(words[3]);
                     account.pass = int.Parse(words[4]);
                     account.money = Convert.ToDouble(words[5]);
+                    account.permissions = PermissionTypes.Read | PermissionTypes.Write;
                     accounts.Add(account);
                 }
             }
@@ -168,8 +203,6 @@ namespace BankSystem
         
         static void Main(string[] args)
         {
-
-
             /*BankAccount admin = new BankAccount();
             admin.permissions = PermissionTypes.Read | PermissionTypes.Write | PermissionTypes.Delete;
             bool canRead = ((PermissionTypes.Read & admin.permissions) == PermissionTypes.Read);
@@ -180,23 +213,26 @@ namespace BankSystem
             {
                 Console.WriteLine(c.name);
             }
-            /*Console.WriteLine("Welcome to Unsecured Bank system! Choose what you want to do:");
+            Console.WriteLine("Welcome to Unsecured Bank system! Choose what you want to do:");
             Console.WriteLine("1. Register new account.");
             Console.WriteLine("2. Login with existing account.");
-            switch (int.Parse(Console.ReadLine()))
+            while (true)
             {
-                case 1: //Registration form
-                    BankAccount account = new BankAccount();
-                    Registration(account);
-                    accounts.Add(account);         
-                    break;
-                case 2: //Login
-                    Login(accounts);
-                    break;
-                default:
+                switch (int.Parse(Console.ReadLine()))
+                {
+                    case 1:
+                        BankAccount account = new BankAccount();
+                        Registration(account);
+                        accounts.Add(account);
+                        break;
+                    case 2:
+                        Login(accounts);
+                        break;
+                    default:
 
-                    break;
-            }*/
+                        break;
+                }
+            }
             Console.ReadLine();
         }
     }

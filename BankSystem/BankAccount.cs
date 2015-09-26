@@ -22,5 +22,12 @@
             this.surname = surname;
             this.year = year;
         }
+
+        public BankAccount DeepCopy()
+        {
+            BankAccount othercopy = (BankAccount)this.MemberwiseClone();
+            return othercopy;
+        }
+
     }
 }
