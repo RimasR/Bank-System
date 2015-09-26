@@ -33,7 +33,7 @@ namespace BankSystem
             account.pass = RandomNumber(100000, 1000000);
             Console.WriteLine("Your id is: {0}", account.id);
             Console.WriteLine("Your password is: {0}", account.pass);
-            Console.WriteLine("Goodbye!");
+            Console.WriteLine("Please save this information!");
         }
 
         static void Login(List<BankAccount> accounts)
@@ -176,11 +176,11 @@ namespace BankSystem
             Console.WriteLine(canRead);*/
             List<BankAccount> accounts = new List<BankAccount>();
             GetAccountInformation(accounts);
-            foreach (var account in accounts)
+            foreach (BankAccount c in accounts)
             {
-                Console.WriteLine(account);
+                Console.WriteLine(c.name);
             }
-            Console.WriteLine("Welcome to Unsecured Bank system! Choose what you want to do:");
+            /*Console.WriteLine("Welcome to Unsecured Bank system! Choose what you want to do:");
             Console.WriteLine("1. Register new account.");
             Console.WriteLine("2. Login with existing account.");
             switch (int.Parse(Console.ReadLine()))
@@ -196,7 +196,7 @@ namespace BankSystem
                 default:
 
                     break;
-            }
+            }*/
             Console.ReadLine();
         }
     }
