@@ -7,8 +7,8 @@
         { get; set; }
         public string surname
         { get; set; }
-        public int id;
-        public int pass;
+        public string id;
+        public string pass;
         public string year;
         public double money
         { get; set; }
