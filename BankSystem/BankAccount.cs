@@ -28,6 +28,10 @@
             BankAccount othercopy = (BankAccount)this.MemberwiseClone();
             return othercopy;
         }
+        public string toString()
+        {
+            return name + " " + surname + " " + year + " " + id + " " + pass + " " + money;
+        }
 
     }
 }

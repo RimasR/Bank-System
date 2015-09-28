@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace BankSystem
@@ -39,24 +40,32 @@ namespace BankSystem
         static void Login(List<BankAccount> accounts)
         {
             BankAccount account = new BankAccount();
-            Console.Write("Please enter your id: ");
-            int id = ReadLoginInfo("id");
-            Console.Write("Please enter your password: ");
-            int password = ReadLoginInfo("pass");
-            foreach (BankAccount c in accounts)
+            bool valid = false;
+            while (!valid)
             {
-                if ((c.id == id) && (c.pass == password))
+                Console.Write("Please enter your id: ");
+                int id = ReadLoginInfo("id");
+                Console.Write("Please enter your password: ");
+                int password = ReadLoginInfo("pass");
+                foreach (BankAccount c in accounts)
                 {
-                    account = c;
-                    Console.WriteLine("Logged in successfully!");
-                    SystemTray(account, accounts);
+                    if ((c.id == id) && (c.pass == password))
+                    {
+                        valid = true;
+                        account = c;
+                        Console.WriteLine("Logged in successfully!");
+                        SystemTray(account, accounts);
+                    }
                 }
+                Console.WriteLine("Wrong id or password!");
             }
+
             
         }
 
         static void SystemTray(BankAccount account, List<BankAccount> accounts)
         {
+            Console.Clear();
             Console.WriteLine("Welcome back " + account.name + "! Avialable options: ");
             Console.WriteLine("1. Transfer money to other account");
             Console.WriteLine("2. Show your credentials");
@@ -100,6 +109,19 @@ namespace BankSystem
             
         }
 
+        static void Exit(List<BankAccount> accounts)
+        {
+            StreamWriter file = new StreamWriter("accounts.txt");
+            foreach (BankAccount c in accounts)
+            {
+                string account = c.toString();
+                file.WriteLine(account);
+            }
+            Console.WriteLine("Good bye!");
+            file.Close();
+            Environment.Exit(0);
+        }
+
         static string ReadCredentials()
         {
             bool valid = false;
@@ -107,7 +129,7 @@ namespace BankSystem
             while (!valid)
             {
                 name = Console.ReadLine();
-                if (System.Text.RegularExpressions.Regex.IsMatch(name, @"^[a-zA-Z]+$"))
+                if (Regex.IsMatch(name, @"^[a-zA-Z]+$"))
                 {
                     valid = true;
                 }
@@ -121,8 +143,21 @@ namespace BankSystem
 
         static string ReadDate()
         {
-            //Reikia pabaigti
-            string date = Console.ReadLine();
+            Regex validDate = new Regex(@"\d{2}-\d{2}-\d{4}");
+            bool valid = false;
+            string date = null;
+            while (!valid)
+            {
+                date = Console.ReadLine();
+                if (validDate.IsMatch(date) == true)
+                {
+                    valid = true;
+                }
+                else
+                {
+                    Console.WriteLine("Wrong input! Year input is dd-mm-yyyy");
+                }
+            }
             return date;
         }
 
@@ -146,7 +181,7 @@ namespace BankSystem
             while (!valid)
             {
                 string temp = Console.ReadLine();
-                if (!string.IsNullOrEmpty(temp) && System.Text.RegularExpressions.Regex.IsMatch(temp, "^[0-9]*$"))
+                if (!string.IsNullOrEmpty(temp) && Regex.IsMatch(temp, "^[0-9]*$"))
                 {
                     id = int.Parse(temp);
                     if (temp.Length == length)
@@ -183,11 +218,11 @@ namespace BankSystem
             else
             {
                 string line;
-                System.IO.StreamReader file = new System.IO.StreamReader("accounts.txt");
+                StreamReader file = new StreamReader("accounts.txt");
                 while ((line = file.ReadLine()) != null)
                 {
                     string[] words = line.Split(' ');
-                    Console.WriteLine("{0}, {1}, {2}, {3}, {4}, {5} ", words[0], words[1], words[2], words[3], words[4], words[5]);
+                    //Console.WriteLine("{0}, {1}, {2}, {3}, {4}, {5} ", words[0], words[1], words[2], words[3], words[4], words[5]);
                     BankAccount account = new BankAccount();
                     account.name = words[0];
                     account.surname = words[1];
@@ -198,6 +233,7 @@ namespace BankSystem
                     account.permissions = PermissionTypes.Read | PermissionTypes.Write;
                     accounts.Add(account);
                 }
+                file.Close();
             }
         }
         
@@ -209,15 +245,12 @@ namespace BankSystem
             Console.WriteLine(canRead);*/
             List<BankAccount> accounts = new List<BankAccount>();
             GetAccountInformation(accounts);
-            foreach (BankAccount c in accounts)
-            {
-                Console.WriteLine(c.name);
-            }
-            Console.WriteLine("Welcome to Unsecured Bank system! Choose what you want to do:");
-            Console.WriteLine("1. Register new account.");
-            Console.WriteLine("2. Login with existing account.");
+            Console.WriteLine("Welcome to Unsecured Bank system!");
             while (true)
             {
+                Console.WriteLine("1. Register new account.");
+                Console.WriteLine("2. Login with existing account.");
+                Console.WriteLine("3. Exit system");
                 switch (int.Parse(Console.ReadLine()))
                 {
                     case 1:
@@ -228,16 +261,17 @@ namespace BankSystem
                     case 2:
                         Login(accounts);
                         break;
+                    case 3:
+                        Exit(accounts);
+                        break;
                     default:
-
+                        Console.Write("Wrong input! Please enter a number 1 or 2");
+                        System.Threading.Thread.Sleep(2000);
+                        Console.Clear();
                         break;
                 }
             }
-            Console.ReadLine();
         }
     }
 
 }
-
-//Sukurti registration forma +
-//Sukurti login forma su -
