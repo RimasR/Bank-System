@@ -35,10 +35,17 @@ namespace BankSystem
             Console.WriteLine("Your id is: {0}", account.id);
             Console.WriteLine("Your password is: {0}", account.pass);
             Console.WriteLine("Please save this information!");
+            GivePermissions("normal", account);
         }
 
         static void Login(List<BankAccount> accounts)
         {
+            foreach (BankAccount c in accounts)
+            {
+                Console.WriteLine(c.id);
+                Console.WriteLine(c.pass);
+                Console.WriteLine("---------");
+            }
             BankAccount account = new BankAccount();
             bool valid = false;
             while (!valid)
@@ -47,14 +54,17 @@ namespace BankSystem
                 string id = ReadLoginInfo("id");
                 Console.Write("Please enter your password: ");
                 string password = ReadLoginInfo("pass");
-                foreach (BankAccount c in accounts)
+                if (accounts.Count > 0)
                 {
-                    if ((c.id == id) && (c.pass == password))
+                    foreach (BankAccount c in accounts.ToList())
                     {
-                        valid = true;
-                        account = c;
-                        Console.WriteLine("Logged in successfully!");
-                        SystemTray(account, accounts);
+                        if ((c.id == id) && (c.pass == password))
+                        {
+                            valid = true;
+                            account = c;
+                            Console.WriteLine("Logged in successfully!");
+                            SystemTray(account, accounts);
+                        }
                     }
                 }
                 Console.WriteLine("Wrong id or password!");
@@ -72,11 +82,13 @@ namespace BankSystem
             {
                 Console.WriteLine("1. Transfer money to other account");
                 Console.WriteLine("2. Show your credentials");
-                Console.Write("3. Delete account \n What would you like to do?");
+                Console.WriteLine("3. Delete account");
+                Console.WriteLine("Exit \n What would you like to do?");
                 string i = Console.ReadLine();
                 switch (int.Parse(i))
                 {
                     case 1:
+                        //Needs more verification!
                         Console.WriteLine("To what ID do you want to send the money to? ");
                         string id = ReadLoginInfo("id");
                         Console.WriteLine("How much money do you want to transfer? ");
@@ -84,16 +96,19 @@ namespace BankSystem
                         var found = accounts.FirstOrDefault(c => c.id == id);
                         account.money = account.money - money;
                         found.money = found.money + money;
-                        //Write accounts id, verify if real
-                        //Choose amount to send, verify if you have it
-                        //Clone object from list, clone.money = normal.money
                         break;
                     case 2:
-                        Console.Clear();
-                        Console.WriteLine("Name: {0}", account.name);
-                        Console.WriteLine("Surname: {0}", account.surname);
-                        Console.WriteLine("Birth date: {0}", account.year);
-                        Console.WriteLine("Money: {0}", account.money);
+                        if (account != null)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Name: {0}", account.name);
+                            Console.WriteLine("Surname: {0}", account.surname);
+                            Console.WriteLine("Birth date: {0}", account.year);
+                            Console.WriteLine("Money: {0}", account.money);
+                        } else
+                        {
+                            Console.WriteLine("This account was deleted");
+                        }
                         break;
                     case 3:
                         if ((PermissionTypes.Delete & account.permissions) == PermissionTypes.Delete)
@@ -103,7 +118,13 @@ namespace BankSystem
                             switch (temp)
                             {
                                 case "Y":
-                                    account = null;
+                                    var deleteThis = accounts.SingleOrDefault(c => c.id == account.id);
+                                    if (deleteThis != null)
+                                    {
+                                        accounts.Remove(deleteThis);
+                                        account = null;
+                                        Console.WriteLine("Deleted successfully!");
+                                    }
                                     break;
                                 default:
 
@@ -136,9 +157,12 @@ namespace BankSystem
             foreach (BankAccount c in accounts)
             {
                 string account = c.toString();
+                Console.WriteLine(account);
+                Console.WriteLine("---------------");
                 file.WriteLine(account);
             }
             Console.WriteLine("Good bye!");
+            Console.ReadLine();
             file.Close();
             Environment.Exit(0);
         }
@@ -160,6 +184,22 @@ namespace BankSystem
                 }
             }
             return name;
+        }
+            
+        static void GivePermissions(string value, BankAccount account)
+        {
+            switch (value)
+            {
+                case "normal":
+                    account.permissions = PermissionTypes.Read | PermissionTypes.Write;
+                    break;
+                case "admin":
+                    account.permissions = PermissionTypes.All;
+                    break;
+                default:
+                    Console.WriteLine("Something's wrong");
+                    break;
+            }
         }
 
         static string ReadDate()
@@ -252,7 +292,14 @@ namespace BankSystem
                     account.id = words[3];
                     account.pass = words[4];
                     account.money = Convert.ToDouble(words[5]);
-                    account.permissions = PermissionTypes.Read | PermissionTypes.Write;
+                    if(words[0] == "admin")
+                    {
+                        GivePermissions("admin", account);
+                    }
+                    else
+                    {
+                        GivePermissions("normal", account);
+                    }
                     accounts.Add(account);
                 }
                 file.Close();
