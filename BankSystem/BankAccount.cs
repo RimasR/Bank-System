@@ -3,13 +3,35 @@ using System.Collections;
 
 namespace BankSystem
 {
-    public class BankAccount
+    public class BankAccount                                        //CLASS
     {
         public PermissionTypes permissions = PermissionTypes.None;
-        public string name
-        { get; set; }
-        public string surname
-        { get; set; }
+        private string name;
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                name = value;
+            }
+        }
+
+        private string surname;
+        public string Surname
+        {
+            get
+            {
+                return surname;
+            }
+            set
+            {
+                surname = value;
+            }
+        }
+
         public string id;
         public string pass;
         public string year;
@@ -24,6 +46,11 @@ namespace BankSystem
             this.name = name;
             this.surname = surname;
             this.year = year;
+        }
+
+        public void GiveMoney(int tempMoney = 100000)
+        {
+            money = tempMoney;
         }
 
         public string toString()

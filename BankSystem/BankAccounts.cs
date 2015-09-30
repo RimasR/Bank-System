@@ -5,10 +5,11 @@ using System.Collections;
 
 namespace BankSystem
 {
-    public class BankAccounts : IEnumerable<BankAccount>
+    public struct BankAccounts : IEnumerable<BankAccount>                               //STRUCT , GENERIC
     {
         private List<BankAccount> accountList;
-        public BankAccounts()
+
+        public void Create()
         {
             accountList = new List<BankAccount>();
         }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BankSystem
 {
-    [Flags]
+    [Flags]                                                                                 //FLAGS
     public enum PermissionTypes : int
     {
         None = 0,
@@ -25,15 +25,16 @@ namespace BankSystem
         static void Registration(BankAccount account)
         {
             Console.Write("Please enter your first name: ");
-            account.name = ReadCredentials();
+            account.Name = ReadCredentials();
             Console.Write("Please enter your last name: ");
-            account.surname = ReadCredentials();
+            account.Surname = ReadCredentials();
             Console.Write("Please enter your birth date dd-mm-yyyy: ");
             account.year = ReadDate();
             account.id = RandomNumber(10000, 100000);
             account.pass = RandomNumber(100000, 1000000);
             Console.WriteLine("Your id is: {0}", account.id);
             Console.WriteLine("Your password is: {0}", account.pass);
+            account.GiveMoney(tempMoney : 1000);                                        //OPTIONAL ARGUMENT
             Console.WriteLine("Please save this information!");
             GivePermissions("normal", account);
         }
@@ -76,7 +77,7 @@ namespace BankSystem
         static void SystemTray(BankAccount account, BankAccounts accounts)
         {
             Console.Clear();
-            Console.WriteLine("Welcome back " + account.name + "! Avialable options: ");
+            Console.WriteLine("Welcome back " + account.Name + "! Available options: ");
             bool valid = true;
             while (valid)
             {
@@ -90,25 +91,23 @@ namespace BankSystem
                         if (account.money > 0)
                         {
                             Console.WriteLine("To what ID do you want to send the money to? ");
-                            Console.WriteLine("ID List for clarification:");
+                            Console.WriteLine(" ----------------------------------- \n ID List for clarification:");
                             foreach (BankAccount acc in accounts)
                             {
                                 Console.WriteLine(acc.id + "\n ---------");
                             }
                             string id = ReadLoginInfo("id");
                             Console.WriteLine("How much money do you want to transfer? ");
-                            int money = int.Parse(Console.ReadLine());
+                            int tempMoney = int.Parse(Console.ReadLine());
+                            double money = tempMoney;                                                                       //DATA WIDENING
                             if (money < account.money)
                             {
                                 var found = accounts.FirstOrDefault(c => c.id == id);
                                 if (found != null)
                                 {
-                                    Console.WriteLine("ID found");
+                                    Console.WriteLine("ID found, money transfered.");
                                     account.money = account.money - money;
-                                    Console.WriteLine("Then: " + found.money);
                                     found.money = found.money + money;
-                                    Console.WriteLine("Now: " + found.money);
-
                                 }
                             }
                         }
@@ -121,13 +120,13 @@ namespace BankSystem
                         if (account != null)
                         {
                             Console.Clear();
-                            Console.WriteLine("Name: {0}", account.name);
-                            Console.WriteLine("Surname: {0}", account.surname);
+                            Console.WriteLine("Name: {0}", account.Name);
+                            Console.WriteLine("Surname: {0}", account.Surname);
                             Console.WriteLine("Birth date: {0}", account.year);
                             Console.WriteLine("Money: {0}", account.money);
                         } else
                         {
-                            Console.WriteLine("This account was deleted");
+                            Console.WriteLine("There is no such account.");
                         }
                         break;
                     case 3:
@@ -141,7 +140,7 @@ namespace BankSystem
                                     var deleteThis = accounts.SingleOrDefault(c => c.id == account.id);
                                     if (deleteThis != null)
                                     {
-                                        accounts.Remove(deleteThis);
+                                        accounts.Remove(acc : deleteThis);                  //NAMED ARGUMENT
                                         account = null;
                                         Console.WriteLine("Deleted successfully!");
                                     }
@@ -325,8 +324,8 @@ namespace BankSystem
                 {
                     string[] words = line.Split(' ');                 
                     BankAccount account = new BankAccount();
-                    account.name = words[0];
-                    account.surname = words[1];
+                    account.Name = words[0];
+                    account.Surname = words[1];
                     account.year = words[2];
                     account.id = words[3];
                     account.pass = words[4];
@@ -347,12 +346,8 @@ namespace BankSystem
         
         static void Main(string[] args)
         {
-            /*BankAccount admin = new BankAccount();
-            admin.permissions = PermissionTypes.Read | PermissionTypes.Write | PermissionTypes.Delete;
-            bool canRead = ((PermissionTypes.Read & admin.permissions) == PermissionTypes.Read);
-            Console.WriteLine(canRead);*/
-            /*List<BankAccount> accounts = new List<BankAccount>();*/
             BankAccounts accounts = new BankAccounts();
+            accounts.Create();
             GetAccountInformation(accounts);
             Console.WriteLine("Welcome to Unsecured Bank system!");
             while (true)
@@ -360,7 +355,7 @@ namespace BankSystem
                 Console.WriteLine("1. Register new account.");
                 Console.WriteLine("2. Login with existing account.");
                 Console.WriteLine("3. Exit system");
-                switch (int.Parse(Console.ReadLine()))
+                switch (ReadInt())
                 {
                     case 1:
                         BankAccount account = new BankAccount();
@@ -376,7 +371,7 @@ namespace BankSystem
                         Console.Clear();
                         break;
                     default:
-                        Console.Write("Wrong input! Please enter a number 1 or 2");
+                        Console.Write("Wrong input! Please enter a number: ");
                         Console.Read();
                         Console.Clear();
                         break;
