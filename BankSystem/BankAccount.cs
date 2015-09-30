@@ -1,6 +1,9 @@
-﻿namespace BankSystem
+﻿using System;
+using System.Collections;
+
+namespace BankSystem
 {
-    class BankAccount
+    public class BankAccount
     {
         public PermissionTypes permissions = PermissionTypes.None;
         public string name
@@ -23,15 +26,9 @@
             this.year = year;
         }
 
-        public BankAccount DeepCopy()
-        {
-            BankAccount othercopy = (BankAccount)this.MemberwiseClone();
-            return othercopy;
-        }
         public string toString()
         {
             return name + " " + surname + " " + year + " " + id + " " + pass + " " + money;
         }
-
     }
 }

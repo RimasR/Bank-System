@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BankSystem
 {
     [Flags]
-    enum PermissionTypes : int
+    public enum PermissionTypes : int
     {
         None = 0,
         Read = 1,
@@ -20,7 +20,7 @@ namespace BankSystem
         All = Read | Write | Modify | Delete | Create
     }
    
-    class Program
+    public class Program
     {
         static void Registration(BankAccount account)
         {
@@ -38,7 +38,7 @@ namespace BankSystem
             GivePermissions("normal", account);
         }
 
-        static void Login(List<BankAccount> accounts)
+        static void Login(BankAccounts accounts)
         {
             foreach (BankAccount c in accounts)
             {
@@ -54,7 +54,7 @@ namespace BankSystem
                 string id = ReadLoginInfo("id");
                 Console.Write("Please enter your password: ");
                 string password = ReadLoginInfo("pass");
-                if (accounts.Count > 0)
+                if (accounts.Count() > 0)
                 {
                     foreach (BankAccount c in accounts.ToList())
                     {
@@ -73,7 +73,7 @@ namespace BankSystem
             
         }
 
-        static void SystemTray(BankAccount account, List<BankAccount> accounts)
+        static void SystemTray(BankAccount account, BankAccounts accounts)
         {
             Console.Clear();
             Console.WriteLine("Welcome back " + account.name + "! Avialable options: ");
@@ -83,19 +83,39 @@ namespace BankSystem
                 Console.WriteLine("1. Transfer money to other account");
                 Console.WriteLine("2. Show your credentials");
                 Console.WriteLine("3. Delete account");
-                Console.WriteLine("Exit \n What would you like to do?");
-                string i = Console.ReadLine();
-                switch (int.Parse(i))
+                Console.WriteLine("4.Exit \n What would you like to do?");
+                switch (ReadInt())
                 {
                     case 1:
-                        //Needs more verification!
-                        Console.WriteLine("To what ID do you want to send the money to? ");
-                        string id = ReadLoginInfo("id");
-                        Console.WriteLine("How much money do you want to transfer? ");
-                        int money = int.Parse(Console.ReadLine());
-                        var found = accounts.FirstOrDefault(c => c.id == id);
-                        account.money = account.money - money;
-                        found.money = found.money + money;
+                        if (account.money > 0)
+                        {
+                            Console.WriteLine("To what ID do you want to send the money to? ");
+                            Console.WriteLine("ID List for clarification:");
+                            foreach (BankAccount acc in accounts)
+                            {
+                                Console.WriteLine(acc.id + "\n ---------");
+                            }
+                            string id = ReadLoginInfo("id");
+                            Console.WriteLine("How much money do you want to transfer? ");
+                            int money = int.Parse(Console.ReadLine());
+                            if (money < account.money)
+                            {
+                                var found = accounts.FirstOrDefault(c => c.id == id);
+                                if (found != null)
+                                {
+                                    Console.WriteLine("ID found");
+                                    account.money = account.money - money;
+                                    Console.WriteLine("Then: " + found.money);
+                                    found.money = found.money + money;
+                                    Console.WriteLine("Now: " + found.money);
+
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("You don't have any money to send!");
+                        }
                         break;
                     case 2:
                         if (account != null)
@@ -151,7 +171,7 @@ namespace BankSystem
             }            
         }
 
-        static void Exit(List<BankAccount> accounts)
+        static void Exit(BankAccounts accounts)
         {
             StreamWriter file = new StreamWriter("accounts.txt");
             foreach (BankAccount c in accounts)
@@ -222,6 +242,26 @@ namespace BankSystem
             return date;
         }
 
+        static int ReadInt()
+        {
+            int tempInt = 0;
+            bool valid = false;
+            while (!valid)
+            {
+                string temp = Console.ReadLine();
+                if (!string.IsNullOrEmpty(temp) && Regex.IsMatch(temp, "^[0-9]*$"))
+                {
+                    valid = true;
+                    tempInt = int.Parse(temp);
+                }
+                else
+                {
+                    Console.WriteLine("Wrong input!");
+                }
+            }
+            return tempInt;
+        }
+
         static string ReadLoginInfo(string type)
         {
             int id = 0;
@@ -270,7 +310,7 @@ namespace BankSystem
             return temp;
         }
 
-        static void GetAccountInformation(List<BankAccount> accounts)
+        static void GetAccountInformation(BankAccounts accounts)
         {
             string temp = "accounts.txt";
             if (!File.Exists(temp))
@@ -283,8 +323,7 @@ namespace BankSystem
                 StreamReader file = new StreamReader("accounts.txt");
                 while ((line = file.ReadLine()) != null)
                 {
-                    string[] words = line.Split(' ');
-                    //Console.WriteLine("{0}, {1}, {2}, {3}, {4}, {5} ", words[0], words[1], words[2], words[3], words[4], words[5]);
+                    string[] words = line.Split(' ');                 
                     BankAccount account = new BankAccount();
                     account.name = words[0];
                     account.surname = words[1];
@@ -312,7 +351,8 @@ namespace BankSystem
             admin.permissions = PermissionTypes.Read | PermissionTypes.Write | PermissionTypes.Delete;
             bool canRead = ((PermissionTypes.Read & admin.permissions) == PermissionTypes.Read);
             Console.WriteLine(canRead);*/
-            List<BankAccount> accounts = new List<BankAccount>();
+            /*List<BankAccount> accounts = new List<BankAccount>();*/
+            BankAccounts accounts = new BankAccounts();
             GetAccountInformation(accounts);
             Console.WriteLine("Welcome to Unsecured Bank system!");
             while (true)
@@ -344,5 +384,4 @@ namespace BankSystem
             }
         }
     }
-
 }
