@@ -22,8 +22,9 @@ namespace BankSystem
    
     public class Program
     {
-        static void Registration(BankAccount account)
+        static void Registration(BankAccounts accounts, List<Log> eventLog)
         {
+            BankAccount account = new BankAccount();
             Console.Write("Please enter your first name: ");
             account.Name = ReadCredentials();
             Console.Write("Please enter your last name: ");
@@ -34,12 +35,15 @@ namespace BankSystem
             account.pass = RandomNumber(100000, 1000000);
             Console.WriteLine("Your id is: {0}", account.id);
             Console.WriteLine("Your password is: {0}", account.pass);
-            account.GiveMoney(tempMoney : 1000);                                        //OPTIONAL ARGUMENT
+            account.GiveMoney(tempMoney : 100000);                                        //OPTIONAL ARGUMENT
             Console.WriteLine("Please save this information!");
             GivePermissions("normal", account);
+            accounts.Add(account);
+            eventLog.Add(new Log() { id = account.id, debugTime = DateTime.Now, debug = "Registered new account" });
+            Console.Read();
         }
 
-        static void Login(BankAccounts accounts)
+        static void Login(BankAccounts accounts, List<Log> eventLog)
         {
             foreach (BankAccount c in accounts)
             {
@@ -64,7 +68,8 @@ namespace BankSystem
                             valid = true;
                             account = c;
                             Console.WriteLine("Logged in successfully!");
-                            SystemTray(account, accounts);
+                            eventLog.Add(new Log() { id = account.id, debugTime = DateTime.Now, debug = "Logged in" });
+                            SystemTray(account, accounts, eventLog);
                         }
                     }
                 }
@@ -74,7 +79,7 @@ namespace BankSystem
             
         }
 
-        static void SystemTray(BankAccount account, BankAccounts accounts)
+        static void SystemTray(BankAccount account, BankAccounts accounts, List<Log> eventLog)
         {
             Console.Clear();
             Console.WriteLine("Welcome back " + account.Name + "! Available options: ");
@@ -102,12 +107,13 @@ namespace BankSystem
                             double money = tempMoney;                                                                       //DATA WIDENING
                             if (money < account.money)
                             {
-                                var found = accounts.FirstOrDefault(c => c.id == id);
+                                var found = accounts.FirstOrDefault(c => c.id == id);                                      //LINQ METHOD
                                 if (found != null)
                                 {
                                     Console.WriteLine("ID found, money transfered.");
                                     account.money = account.money - money;
                                     found.money = found.money + money;
+                                    eventLog.Add(new Log() { id = account.id, debugTime = DateTime.Now, debug = "Transfered money to other account" });
                                 }
                             }
                         }
@@ -124,6 +130,7 @@ namespace BankSystem
                             Console.WriteLine("Surname: {0}", account.Surname);
                             Console.WriteLine("Birth date: {0}", account.year);
                             Console.WriteLine("Money: {0}", account.money);
+                            eventLog.Add(new Log() { id = account.id, debugTime = DateTime.Now, debug = "Showed the credentials of an account" });
                         } else
                         {
                             Console.WriteLine("There is no such account.");
@@ -140,6 +147,7 @@ namespace BankSystem
                                     var deleteThis = accounts.SingleOrDefault(c => c.id == account.id);
                                     if (deleteThis != null)
                                     {
+                                        eventLog.Add(new Log() { id = account.id, debugTime = DateTime.Now, debug = "Deleted account" });
                                         accounts.Remove(acc : deleteThis);                  //NAMED ARGUMENT
                                         account = null;
                                         Console.WriteLine("Deleted successfully!");
@@ -158,6 +166,11 @@ namespace BankSystem
                         }
                         break;
                     case 4:
+                        if(account != null)
+                        {
+                            eventLog.Add(new Log() { id = account.id, debugTime = DateTime.Now, debug = "Logged off" });
+                        }
+
                         valid = false;
                         Console.Clear();
                         break;
@@ -170,19 +183,39 @@ namespace BankSystem
             }            
         }
 
-        static void Exit(BankAccounts accounts)
+        static void Exit(BankAccounts accounts, List<Log> eventLog)
         {
             StreamWriter file = new StreamWriter("accounts.txt");
-            foreach (BankAccount c in accounts)
+            foreach (BankAccount c in accounts)                                                     //USAGE OF IENUMERABLE IN foreach
             {
                 string account = c.toString();
                 Console.WriteLine(account);
                 Console.WriteLine("---------------");
                 file.WriteLine(account);
             }
+            file.Close();
+            eventLog.Sort();                                                                        //USAGE OF ICOMPARABLE
+            string temp = "EventLog.txt";
+            if (!File.Exists(temp))
+            {
+                File.Create(temp);
+            }
+            else
+            {
+                StreamReader readDebug = new StreamReader("EventLog.txt");
+                string text = readDebug.ReadToEnd();
+                readDebug.Close();
+                StreamWriter writeDebug = new StreamWriter("EventLog.txt");
+                writeDebug.WriteLine(text);
+                foreach (var element in eventLog)
+                {
+                    Console.WriteLine(element);
+                    writeDebug.WriteLine(element);
+                }
+                writeDebug.Close();
+            }
             Console.WriteLine("Good bye!");
             Console.ReadLine();
-            file.Close();
             Environment.Exit(0);
         }
 
@@ -330,7 +363,7 @@ namespace BankSystem
                     account.id = words[3];
                     account.pass = words[4];
                     account.money = Convert.ToDouble(words[5]);
-                    if(words[0] == "admin")
+                    if(words[0] == "admin" || words[1] == "admin")
                     {
                         GivePermissions("admin", account);
                     }
@@ -349,6 +382,7 @@ namespace BankSystem
             BankAccounts accounts = new BankAccounts();
             accounts.Create();
             GetAccountInformation(accounts);
+            List<Log> eventLog = new List<Log>();
             Console.WriteLine("Welcome to Unsecured Bank system!");
             while (true)
             {
@@ -358,16 +392,15 @@ namespace BankSystem
                 switch (ReadInt())
                 {
                     case 1:
-                        BankAccount account = new BankAccount();
-                        Registration(account);
-                        accounts.Add(account);
+                        Registration(accounts, eventLog);
+                        Console.Clear();
                         break;
                     case 2:
-                        Login(accounts);
+                        Login(accounts, eventLog);
                         Console.Clear();
                         break;
                     case 3:
-                        Exit(accounts);
+                        Exit(accounts, eventLog);
                         Console.Clear();
                         break;
                     default:
