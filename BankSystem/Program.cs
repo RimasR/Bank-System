@@ -26,9 +26,9 @@ namespace BankSystem
         {
             BankAccount account = new BankAccount();
             Console.Write("Please enter your first name: ");
-            account.Name = ReadCredentials();
+            account.Name = ReadCredentials().UppercaseFirstLetter();
             Console.Write("Please enter your last name: ");
-            account.Surname = ReadCredentials();
+            account.Surname = ReadCredentials().UppercaseFirstLetter(); //EXTENTION METHOD
             Console.Write("Please enter your birth date dd-mm-yyyy: ");
             account.year = ReadDate();
             account.id = RandomNumber(10000, 100000);
@@ -37,7 +37,14 @@ namespace BankSystem
             Console.WriteLine("Your password is: {0}", account.pass);
             account.GiveMoney(tempMoney : 100000);                                        //OPTIONAL ARGUMENT
             Console.WriteLine("Please save this information!");
-            GivePermissions("normal", account);
+            if (account.Name == "admin" || account.Name == "Admin")
+            {
+                GivePermissions("admin", account);
+            }
+            else
+            {
+                GivePermissions("normal", account);
+            }
             accounts.Add(account);
             eventLog.Add(new Log() { id = account.id, debugTime = DateTime.Now, debug = "Registered new account" });
             Console.Read();
@@ -363,9 +370,9 @@ namespace BankSystem
                     account.id = words[3];
                     account.pass = words[4];
                     account.money = Convert.ToDouble(words[5]);
-                    if(words[0] == "admin" || words[1] == "admin")
+                    if(words[0] == "Admin" || words[1] == "Admin")
                     {
-                        GivePermissions("admin", account);
+                        GivePermissions("Admin", account);
                     }
                     else
                     {
