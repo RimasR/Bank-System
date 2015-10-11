@@ -1,14 +1,39 @@
-﻿namespace BankSystem
+﻿using System;
+using System.Collections;
+
+namespace BankSystem
 {
-    class BankAccount
+    public class BankAccount                                        //CLASS
     {
         public PermissionTypes permissions = PermissionTypes.None;
-        public string name
-        { get; set; }
-        public string surname
-        { get; set; }
-        public int id;
-        public int pass;
+        private string name;
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                name = value;
+            }
+        }
+
+        private string surname;
+        public string Surname
+        {
+            get
+            {
+                return surname;
+            }
+            set
+            {
+                surname = value;
+            }
+        }
+
+        public string id;
+        public string pass;
         public string year;
         public double money
         { get; set; }
@@ -21,6 +46,16 @@
             this.name = name;
             this.surname = surname;
             this.year = year;
+        }
+
+        public void GiveMoney(int tempMoney = 100000)
+        {
+            money = tempMoney;
+        }
+
+        public string toString()
+        {
+            return name + " " + surname + " " + year + " " + id + " " + pass + " " + money;
         }
     }
 }
