@@ -22,7 +22,11 @@ namespace BankSystem
    
     public class Program
     {
-        static void Registration(BankAccounts accounts, List<Log> eventLog)
+        //
+        ///
+        ////
+        /////Registration blank to register new account
+        static void Registration(BankAccounts accounts, List<Log> eventLog)  
         {
             BankAccount account = new BankAccount();
             Console.Write("Please enter your first name: ");
@@ -50,7 +54,10 @@ namespace BankSystem
             eventLog.Add(new Log() { id = account.id, debugTime = DateTime.Now, debug = "Registered new account" });
             Console.Read();
         }
-
+        //
+        ///
+        ////
+        /////Login menu
         static void Login(BankAccounts accounts, List<Log> eventLog)
         {
             foreach (BankAccount c in accounts)
@@ -87,7 +94,10 @@ namespace BankSystem
 
             
         }
-
+        //
+        ///
+        ////
+        /////System menu for an account
         static void SystemTray(BankAccount account, BankAccounts accounts, List<Log> eventLog)
         {
             Console.Clear();
@@ -191,7 +201,10 @@ namespace BankSystem
                 }
             }            
         }
-
+        //
+        ///
+        ////
+        /////Exit function, saving and storing all info into files
         static void Exit(BankAccounts accounts, List<Log> eventLog)
         {
             StreamWriter file = new StreamWriter("accounts.txt");
@@ -227,7 +240,10 @@ namespace BankSystem
             Console.ReadLine();
             Environment.Exit(0);
         }
-
+        //
+        ///
+        ////
+        /////Function to validate weather or not the input is letters only.
         static string ReadCredentials()
         {
             bool valid = false;
@@ -246,7 +262,12 @@ namespace BankSystem
             }
             return name;
         }
-            
+
+        //
+        ///
+        ////
+        /////Function to give certain permissions to an account
+
         static void GivePermissions(string value, BankAccount account)
         {
             switch (value)
@@ -262,7 +283,10 @@ namespace BankSystem
                     break;
             }
         }
-
+        //
+        ///
+        ////
+        /////Function to validate whether or not the input is a date
         static string ReadDate()
         {
             Regex validDate = new Regex(@"\d{2}-\d{2}-\d{4}");
@@ -283,6 +307,11 @@ namespace BankSystem
             return date;
         }
 
+        //
+        ///
+        ////
+        /////Function to validate weather or not the input is digits only.
+
         static int ReadInt()
         {
             int tempInt = 0;
@@ -302,6 +331,10 @@ namespace BankSystem
             }
             return tempInt;
         }
+        //
+        ///
+        ////
+        /////Function to validate weather or not username and password is in good format.
 
         static string ReadLoginInfo(string type)
         {
@@ -342,6 +375,10 @@ namespace BankSystem
             }
             return id.ToString();
         }
+        //
+        ///
+        ////
+        /////Generates random number from i number to x number
 
         static string RandomNumber(Random rnd, int i, int x)
         {
@@ -349,6 +386,11 @@ namespace BankSystem
             string temp = random.ToString();
             return temp;
         }
+
+        //
+        ///
+        ////
+        /////Reads account information from files
 
         static void GetAccountInformation(BankAccounts accounts)
         {
@@ -384,7 +426,12 @@ namespace BankSystem
                 file.Close();
             }
         }
-        
+
+        //
+        ///
+        ////
+        /////First menu to choose actions from
+
         static void Main(string[] args)
         {
             BankAccounts accounts = new BankAccounts();
