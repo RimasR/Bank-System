@@ -13,5 +13,5 @@
 <p>Bent du LINQ į objektus panaudojimai: per metodus (0,05) ir per užklausas (0,05), vienas iš jų turi būti su groupJoin.  CHECK first, not groupJoin</p>
 <p>Išreikštai įgyvendinami bent 3 .NET standartiniai interfeisai (0,3):
 <p> a) IEnumerable, CHECK</p>
-<p> b) bent vienas yra iš (IComparable, IComparer, IEquatable, IEnumerator), </p> CHECK IComparable
+<p> b) bent vienas yra iš (IComparable, IComparer, IEquatable, IEnumerator), CHECK IComparable </p> 
 <p> c) bet koks kitas (gali būti ir iš antro punkto). </p>
