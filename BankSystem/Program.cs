@@ -31,8 +31,9 @@ namespace BankSystem
             account.Surname = ReadCredentials().UppercaseFirstLetter(); //EXTENTION METHOD
             Console.Write("Please enter your birth date dd-mm-yyyy: ");
             account.year = ReadDate();
-            account.id = RandomNumber(10000, 100000);
-            account.pass = RandomNumber(100000, 1000000);
+            Random rnd = new Random();
+            account.id = RandomNumber(rnd, 10000, 100000);
+            account.pass = RandomNumber(rnd, 100000, 1000000);
             Console.WriteLine("Your id is: {0}", account.id);
             Console.WriteLine("Your password is: {0}", account.pass);
             account.GiveMoney(tempMoney : 100000);                                        //OPTIONAL ARGUMENT
@@ -58,6 +59,7 @@ namespace BankSystem
                 Console.WriteLine(c.pass);
                 Console.WriteLine("---------");
             }
+
             BankAccount account = new BankAccount();
             bool valid = false;
             while (!valid)
@@ -341,9 +343,8 @@ namespace BankSystem
             return id.ToString();
         }
 
-        static string RandomNumber(int i, int x)
+        static string RandomNumber(Random rnd, int i, int x)
         {
-            Random rnd = new Random();
             int random = rnd.Next(i, x);
             string temp = random.ToString();
             return temp;
