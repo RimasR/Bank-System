@@ -283,7 +283,7 @@ namespace BankSystem
                     break;
             }
         }
-        //
+        /
         ///
         ////
         /////Function to validate whether or not the input is a date
