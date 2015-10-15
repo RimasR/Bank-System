@@ -127,6 +127,9 @@ namespace BankSystem
                             if (money < account.money)
                             {
                                 var found = accounts.FirstOrDefault(c => c.id == id);                                      //LINQ METHOD
+                                /* var found = from foundId in accounts
+                                   where foundId.id==id
+                                   select foundId;*/
                                 if (found != null)
                                 {
                                     Console.WriteLine("ID found, money transfered.");
@@ -134,6 +137,9 @@ namespace BankSystem
                                     found.money = found.money + money;
                                     eventLog.Add(new Log() { id = account.id, debugTime = DateTime.Now, debug = "Transfered money to other account" });
                                 }
+                            } else
+                            {
+                                Console.WriteLine("You don't have that much money.");
                             }
                         }
                         else
@@ -172,9 +178,13 @@ namespace BankSystem
                                         Console.WriteLine("Deleted successfully!");
                                     }
                                     break;
+                                case "N":
+                                    Console.Clear();
+                                    Console.WriteLine("Account is not deleted.");
+                                    break;
                                 default:
 
-                                    break;
+                                break;
                             }
                         }
                         else
@@ -236,8 +246,8 @@ namespace BankSystem
                 }
                 writeDebug.Close();
             }
-            Console.WriteLine("Good bye!");
-            Console.ReadLine();
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
             Environment.Exit(0);
         }
         //
@@ -272,9 +282,11 @@ namespace BankSystem
         {
             switch (value)
             {
+                case "Normal":
                 case "normal":
                     account.permissions = PermissionTypes.Read | PermissionTypes.Write;
                     break;
+                case "Admin":
                 case "admin":
                     account.permissions = PermissionTypes.All;
                     break;
@@ -283,13 +295,11 @@ namespace BankSystem
                     break;
             }
         }
-        /
-        ///
-        ////
+        
         /////Function to validate whether or not the input is a date
         static string ReadDate()
         {
-            Regex validDate = new Regex(@"\d{2}-\d{2}-\d{4}");
+            Regex validDate = new Regex(@"\d{2}-\d{2}-\d{4}"); //REGEX
             bool valid = false;
             string date = null;
             while (!valid)

@@ -28,7 +28,7 @@ public class Log :IComparable<Log>       //ICOMPARABLE
             String.Format("ID: {0,-10} Date: {1, 6} Event: {2}", id, debugTime.ToString(), debug);
     }
 
-    public int CompareTo(Log other)
+    public int CompareTo(Log other) //Sort by debug time descending
     {
         if (this.debugTime < other.debugTime) return 1;
         else if (this.debugTime > other.debugTime) return -1;
