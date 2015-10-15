@@ -305,7 +305,7 @@ namespace BankSystem
             while (!valid)
             {
                 date = Console.ReadLine();
-                if (validDate.IsMatch(date) == true)
+                if (validDate.IsMatch(date))
                 {
                     valid = true;
                 }
@@ -412,28 +412,30 @@ namespace BankSystem
             else
             {
                 string line;
-                StreamReader file = new StreamReader("accounts.txt");
-                while ((line = file.ReadLine()) != null)
+                using (StreamReader file = new StreamReader("accounts.txt"))
                 {
-                    string[] words = line.Split(' ');                 
-                    BankAccount account = new BankAccount();
-                    account.Name = words[0];
-                    account.Surname = words[1];
-                    account.year = words[2];
-                    account.id = words[3];
-                    account.pass = words[4];
-                    account.money = Convert.ToDouble(words[5]);
-                    if(words[0] == "Admin" || words[1] == "Admin")
+                    while ((line = file.ReadLine()) != null)
                     {
-                        GivePermissions("Admin", account);
+                        string[] words = line.Split(' ');
+                        BankAccount account = new BankAccount();
+                        account.Name = words[0];
+                        account.Surname = words[1];
+                        account.year = words[2];
+                        account.id = words[3];
+                        account.pass = words[4];
+                        account.money = Convert.ToDouble(words[5]);
+                        if (words[0] == "Admin" || words[1] == "Admin")
+                        {
+                            GivePermissions("Admin", account);
+                        }
+                        else
+                        {
+                            GivePermissions("normal", account);
+                        }
+                        accounts.Add(account);
                     }
-                    else
-                    {
-                        GivePermissions("normal", account);
-                    }
-                    accounts.Add(account);
                 }
-                file.Close();
+                    //file.Close();
             }
         }
 
