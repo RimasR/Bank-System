@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-
-namespace BankSystem
+﻿namespace BankSystem
 {
     public class BankAccount                                        //CLASS
     {

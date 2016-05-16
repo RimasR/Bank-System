@@ -17,21 +17,17 @@ public class Log :IComparable<Log>       //ICOMPARABLE
         }
     }*/
     public DateTime debugTime { get; set; }
-	public Log()
-	{
-
-	}
 
     public override string ToString()
     {
         return
-            String.Format("ID: {0,-10} Date: {1, 6} Event: {2}", id, debugTime.ToString(), debug);
+            String.Format("ID: {0,-10} Date: {1, 6} Event: {2}", id, debugTime, debug);
     }
 
     public int CompareTo(Log other) //Sort by debug time descending
     {
-        if (this.debugTime < other.debugTime) return 1;
-        else if (this.debugTime > other.debugTime) return -1;
-        else return 0;
+        if (debugTime < other.debugTime) return 1;
+        if (debugTime > other.debugTime) return -1;
+        return 0;
     }
 }
